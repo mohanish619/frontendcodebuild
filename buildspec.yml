@@ -1,0 +1,38 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 19
+    commands:
+      - echo "Updating system packages and installing dependencies..."
+      - yum update -y
+      - yum install -y git
+      - echo "Dependencies installed successfully."
+      
+  pre_build:
+    commands:
+      - echo "Cloning the repository from GitHub..."
+      - git clone https://github.com/mohanish619/frontendcodebuild.git
+      - cd frontendcodebuild
+      - echo "Setting up environment variables..."
+      - echo "VITE_API_URL=/api" > .env
+      - echo "Environment variables set."
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 156041427059.dkr.ecr.us-east-2.amazonaws.com
+  build:
+    commands:
+      - echo "Building a Docker image for the application..."
+      - docker build -t my-frontend-app .
+      - echo "Docker image built successfully."
+  post_build:
+    commands:
+      - echo "Tagging and pushing the Docker image to the registry..."
+      # Replace <repository-url> with your Docker registry URL (e.g., Amazon ECR or Docker Hub)
+      - docker tag my-frontend-app 156041427059.dkr.ecr.us-east-2.amazonaws.com/mahi:latest
+      - docker push 156041427059.dkr.ecr.us-east-2.amazonaws.com/mahi:latest
+      - echo "Docker image pushed successfully."
+
+artifacts:
+  files:
+    - "**/*"
+  discard-paths: yes
