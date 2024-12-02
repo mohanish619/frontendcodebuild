@@ -9,8 +9,8 @@ phases:
       - yum update -y
       - yum install -y git nginx docker
       - echo "Dependencies installed successfully."
-      - service docker start
-      - service docker enable
+      - sudo systemctl start docker
+      - sudo systemctl enable docker 
   pre_build:
     commands:
       - echo "Cloning the repository from GitHub..."
