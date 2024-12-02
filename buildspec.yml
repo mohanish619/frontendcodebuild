@@ -2,8 +2,7 @@ version: 0.2
 
 phases:
   install:
-    runtime-versions:
-      docker: 19
+   
     commands:
       - echo "Updating system packages and installing dependencies..."
       - yum update -y
