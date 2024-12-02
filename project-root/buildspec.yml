@@ -1,0 +1,35 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+      - echo "Starting the build process..."
+      - echo "Updating system and installing dependencies..."
+      - sudo yum update -y 
+      - sudo yum install docker -y
+  pre_build:
+    commands:
+      - echo "Cloning the repository..."
+      - git clone https://github.com/mohanish619/fronted.git frontend
+      - cd frontend/completeproject/frontend
+      - echo "Setting up environment variables..."
+      - echo "VITE_API_URL=/api" > .env
+      - echo "Logging into Docker..."
+      - $(aws ecr get-login-password --region <your-region>) | docker login --username AWS --password-stdin <your-repo>
+  build:
+    commands:
+      - echo "Building the Docker image..."
+      - docker build -t my-frontend-app .
+      - echo "Docker image built successfully."
+  post_build:
+    commands:
+      - echo "Pushing the Docker image to the registry..."
+      - docker tag my-frontend-app 156041427059.dkr.ecr.us-east-2.amazonaws.com/mahi:latest
+      - docker push 156041427059.dkr.ecr.us-east-2.amazonaws.com/mahi:latest
+      - echo "Build process completed."
+artifacts:
+  files:
+    - "**/*"
+  discard-paths: yes
