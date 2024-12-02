@@ -1,0 +1,61 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo "Updating system packages and installing dependencies..."
+      - yum update -y
+      - yum install -y git nginx docker
+      - echo "Dependencies installed successfully."
+      - service docker start
+      - service docker enable
+  pre_build:
+    commands:
+      - echo "Cloning the repository from GitHub..."
+      - git clone https://github.com/mohanish619/frontendcodebuild.git
+      - cd frontendcodebuild
+      - echo "Setting up environment variables..."
+      - echo "VITE_API_URL=/api" > .env
+      - echo "Environment variables set."
+  build:
+    commands:
+      - echo "Installing npm dependencies..."
+      - npm install
+      - echo "Building the project..."
+      - npm run build
+      - echo "Project build completed."
+      - echo "Setting up NGINX..."
+      - ls dist
+      - cp -r dist /usr/share/nginx/html
+      - echo "Configuring NGINX..."
+      - |
+        cat <<EOF > /etc/nginx/nginx.conf
+        server {
+            listen       80;
+            server_name  localhost;
+
+            root         /usr/share/nginx/html/dist;
+
+            location /api {
+                proxy_pass http://10.0.0.71:3200/api;
+            }
+        }
+        EOF
+      - echo "NGINX configured successfully."
+  post_build:
+    commands:
+      - echo "Building a Docker image for the application..."
+      - docker build -t my-frontend-app .
+      - echo "Docker image built successfully."
+      - echo "Pushing the Docker image to the registry..."
+      # Replace <repository-url> with your Docker registry URL
+      - docker tag my-frontend-app 156041427059.dkr.ecr.us-east-2.amazonaws.com/mahi:latest
+      - docker push 156041427059.dkr.ecr.us-east-2.amazonaws.com/mahi:latest
+      - echo "Docker image pushed successfully."
+
+artifacts:
+  files:
+    - "**/*"
+  discard-paths: yes
