@@ -20,8 +20,7 @@ phases:
       - export DOCKER_PASSWORD=$(aws secretsmanager get-secret-value --secret-id docker-hub-credentials --query SecretString --output text | jq -r .password)
       - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
       - echo "Docker Hub authentication successful."
-  build:
-    commands:
+
       build:
   commands:
     - echo "Changing to the repository directory..."
