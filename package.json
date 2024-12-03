@@ -1,0 +1,22 @@
+{
+    "name": "frontendcodebuild",
+    "version": "1.0.0",
+    "description": "A sample front-end application for CodeBuild setup",
+    "main": "index.js",
+    "scripts": {
+      "start": "vite",
+      "build": "vite build",
+      "serve": "vite preview"
+    },
+    "author": "Mohanish Sargam",
+    "license": "MIT",
+    "dependencies": {
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+      "vite": "^4.0.0",
+      "@vitejs/plugin-react": "^2.0.0"
+    }
+  }
+  
