@@ -23,7 +23,7 @@ RUN npm run build
 RUN ls -l /app/dist
 
 # Copy the dist folder into Nginx's root directory
-COPY frontendcodebuild/dist/ /usr/share/nginx/html/
+COPY frontendcodebuild/app/dist /usr/share/nginx/html/
 
 # Expose port 80
 EXPOSE 80
