@@ -5,7 +5,7 @@ FROM node:18
 WORKDIR /app
 
 # Copy the package.json and package-lock.json first to install dependencies
-COPY package*.json ./
+COPY frontendcodebuild/package*.json ./
 
 # Install dependencies
 RUN npm install
