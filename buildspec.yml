@@ -21,8 +21,8 @@ phases:
       - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
       - echo "Docker Hub authentication successful."
   
-      build:
-  commands:
+  build:
+   commands:
     - echo "Building a Docker image for the application..."
     - ls -l  # List files to ensure dist folder exists
     - npm run build  # Ensure the dist folder is generated
