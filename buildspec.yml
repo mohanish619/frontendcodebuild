@@ -23,8 +23,6 @@ phases:
   
   build:
     commands:
-      - echo "Changing to the repository directory..."
-      - cd frontendcodebuild
       - echo "Building a Docker image for the application..."
       - docker build -t my-frontend-app .
       - echo "Docker image built successfully."
