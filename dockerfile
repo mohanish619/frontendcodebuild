@@ -4,8 +4,8 @@ FROM node:18
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the package.json and package-lock.json first to install dependencies
-COPY frontendcodebuild/package*.json ./
+# Copy package.json and package-lock.json from the correct directory
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
