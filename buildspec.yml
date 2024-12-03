@@ -39,4 +39,5 @@ build:
 artifacts:
   files:
     - "**/*"
+    - "scripts/*"
   discard-paths: yes
