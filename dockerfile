@@ -19,6 +19,9 @@ COPY . .
 # Build the project using Vite
 RUN npm run build
 
+# List files in the current directory to verify dist exists
+RUN ls -l /app/dist
+
 # Copy the dist folder into Nginx's root directory
 COPY dist/ /usr/share/nginx/html/
 
