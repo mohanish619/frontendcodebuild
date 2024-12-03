@@ -1,20 +1,29 @@
-# Use the official Node.js image from Docker Hub
-FROM node:18
+# Use the official Nginx image from Docker Hub
+FROM nginx:alpine
 
-# Set the working directory in the container
+# Set the working directory to /app in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json from the correct directory
+# Install Node.js and dependencies for building the app
+RUN apk add --no-cache nodejs npm
+
+# Copy the package.json and package-lock.json first to install dependencies
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the entire project into the container
 COPY . .
 
-# Expose the port the app will run on
-EXPOSE 3000
+# Build the project using Vite
+RUN npm run build
 
-# Command to run the app
-CMD ["npm", "start"]
+# Copy the dist folder into Nginx's root directory
+COPY dist/ /usr/share/nginx/html/
+
+# Expose port 80
+EXPOSE 80
+
+# Command to run Nginx (default)
+CMD ["nginx", "-g", "daemon off;"]
