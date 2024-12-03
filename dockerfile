@@ -8,7 +8,7 @@ WORKDIR /app
 RUN apk add --no-cache nodejs npm
 
 # Copy the package.json and package-lock.json first to install dependencies
-COPY package*.json ./
+COPY package*.json ./ 
 
 # Install dependencies
 RUN npm install
@@ -19,11 +19,11 @@ COPY . .
 # Build the project using Vite
 RUN npm run build
 
-# List files in the current directory to verify dist exists
+# List files to ensure dist folder exists
 RUN ls -l /app/dist
 
 # Copy the dist folder into Nginx's root directory
-COPY dist/ /usr/share/nginx/html/
+COPY frontendcodebuild/dist/ /usr/share/nginx/html/
 
 # Expose port 80
 EXPOSE 80
