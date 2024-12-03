@@ -20,15 +20,15 @@ phases:
       - export DOCKER_PASSWORD=$(aws secretsmanager get-secret-value --secret-id docker-hub-credentials --query SecretString --output text | jq -r .password)
       - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
       - echo "Docker Hub authentication successful."
-      
-build:
-  commands:
-    - echo "Changing to the repository directory..."
-    - cd frontendcodebuild
-    - echo "Building a Docker image for the application..."
-    - docker build -t my-frontend-app .
-    - echo "Docker image built successfully."
-
+  
+  build:
+    commands:
+      - echo "Changing to the repository directory..."
+      - cd frontendcodebuild
+      - echo "Building a Docker image for the application..."
+      - docker build -t my-frontend-app .
+      - echo "Docker image built successfully."
+  
   post_build:
     commands:
       - echo "Tagging and pushing the Docker image to the registry..."
@@ -39,5 +39,4 @@ build:
 artifacts:
   files:
     - "**/*"
-    - "scripts/*"
   discard-paths: yes
