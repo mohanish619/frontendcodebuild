@@ -2,13 +2,12 @@ version: 0.2
 
 phases:
   install:
-   
     commands:
       - echo "Updating system packages and installing dependencies..."
       - yum update -y
-      - yum install -y git
-      - echo "Dependencies installed successfully."
-      
+      - yum install -y git docker
+      - yum install -y jq
+
   pre_build:
     commands:
       - echo "Cloning the repository from GitHub..."
@@ -16,8 +15,11 @@ phases:
       - cd frontendcodebuild
       - echo "Setting up environment variables..."
       - echo "VITE_API_URL=/api" > .env
-      - echo "Environment variables set."
-      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 156041427059.dkr.ecr.us-east-2.amazonaws.com
+      - echo "Authenticating with Docker Hub..."
+      - export DOCKER_USERNAME=$(aws secretsmanager get-secret-value --secret-id docker-hub-credentials --query SecretString --output text | jq -r .username)
+      - export DOCKER_PASSWORD=$(aws secretsmanager get-secret-value --secret-id docker-hub-credentials --query SecretString --output text | jq -r .password)
+      - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
+      - echo "Docker Hub authentication successful."
   build:
     commands:
       - echo "Building a Docker image for the application..."
@@ -26,9 +28,8 @@ phases:
   post_build:
     commands:
       - echo "Tagging and pushing the Docker image to the registry..."
-      # Replace <repository-url> with your Docker registry URL (e.g., Amazon ECR or Docker Hub)
-      - docker tag my-frontend-app 156041427059.dkr.ecr.us-east-2.amazonaws.com/mahi:latest
-      - docker push 156041427059.dkr.ecr.us-east-2.amazonaws.com/mahi:latest
+      - docker tag my-frontend-app 156041427059.dkr.ecr.us-east-2.amazonaws.com/my-frontend-app:latest
+      - docker push 156041427059.dkr.ecr.us-east-2.amazonaws.com/my-frontend-app:latest
       - echo "Docker image pushed successfully."
 
 artifacts:
