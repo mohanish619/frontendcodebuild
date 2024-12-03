@@ -1,7 +1,12 @@
 #!/bin/bash
-echo "Installing dependencies..."
-yum update -y
+echo "Installing Docker..."
 yum install -y docker
+
+echo "Starting Docker service..."
 systemctl start docker
 systemctl enable docker
-echo "Dependencies installed successfully."
+
+echo "Installing Nginx..."
+yum install -y nginx
+systemctl start nginx
+systemctl enable nginx
